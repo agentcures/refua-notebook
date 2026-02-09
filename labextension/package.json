@@ -1,0 +1,43 @@
+{
+  "name": "refua-notebook",
+  "version": "0.5.0",
+  "description": "Refua notebook JupyterLab renderer",
+  "keywords": [
+    "jupyterlab-extension",
+    "refua",
+    "molstar",
+    "smiles",
+    "admet"
+  ],
+  "license": "MIT",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "style": "style/index.css",
+  "files": [
+    "lib/**/*",
+    "style/**/*",
+    "static/**/*",
+    "style.js"
+  ],
+  "scripts": {
+    "build": "tsc -p . && node ./node_modules/@jupyterlab/builder/lib/build.js",
+    "build:prod": "tsc -p . && node ./node_modules/@jupyterlab/builder/lib/build.js --production",
+    "build:dev": "tsc -p . && node ./node_modules/@jupyterlab/builder/lib/build.js --development",
+    "clean": "rimraf lib tsconfig.tsbuildinfo"
+  },
+  "dependencies": {
+    "@jupyterlab/rendermime-interfaces": "^3.13.3",
+    "@lumino/widgets": "^2.0.0",
+    "molstar": "^4.11.0",
+    "smiles-drawer": "^2.1.5"
+  },
+  "devDependencies": {
+    "@jupyterlab/builder": "^4.5.3",
+    "rimraf": "^5.0.5",
+    "typescript": "~5.3.3"
+  },
+  "jupyterlab": {
+    "mimeExtension": true,
+    "outputDir": "../refua_notebook/labextension"
+  }
+}

@@ -1,0 +1,82 @@
+[project]
+name = "refua-notebook"
+version = "0.5.0"
+description = "Jupyter UI extensions for drug discovery visualization - ADMET, 3D complex viewer, SMILES drawing"
+authors = [{ name = "JJ Ben-Joseph", email = "jj@tensorspace.ai" }]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+keywords = [
+    "jupyter",
+    "widgets",
+    "drug-discovery",
+    "admet",
+    "molstar",
+    "smiles",
+    "protein",
+    "ligand",
+    "cheminformatics",
+    "bioinformatics",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Framework :: Jupyter",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Chemistry",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "ipython",
+    "refua>=0.5.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/agentcures/refua-notebook"
+Repository = "https://github.com/agentcures/refua-notebook"
+Documentation = "https://github.com/agentcures/refua-notebook#readme"
+Issues = "https://github.com/agentcures/refua-notebook/issues"
+
+[tool.poetry]
+packages = [{include = "refua_notebook"}]
+include = [
+    { path = "LICENSE" },
+    { path = "README.md" },
+    { path = "examples/*.ipynb" },
+    { path = "labextension/package.json", format = ["sdist"] },
+    { path = "labextension/yarn.lock", format = ["sdist"] },
+    { path = "labextension/tsconfig.json", format = ["sdist"] },
+    { path = "labextension/src/**", format = ["sdist"] },
+    { path = "labextension/style/**", format = ["sdist"] },
+    { path = "labextension/lib/**", format = ["sdist"] },
+    { path = "refua_notebook/labextension/**", format = ["sdist", "wheel"] },
+]
+exclude = [
+    "examples/**/.ipynb_checkpoints/**",
+]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+black = "*"
+mypy = "*"
+jupyterlab = "*"
+ipykernel = "*"
+nbconvert = "*"
+nbformat = "*"
+jupyter = "*"
+playwright = "*"
+
+[tool.mypy]
+python_version = "3.12"
+
+[[tool.mypy.overrides]]
+module = ["refua", "refua.*"]
+ignore_missing_imports = true
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

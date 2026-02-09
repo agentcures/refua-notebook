@@ -1,0 +1,4 @@
+/* Refua notebook renderer styles. Most widget styles are inlined by Python. */
+.refua-notebook-root {
+  display: block;
+}
