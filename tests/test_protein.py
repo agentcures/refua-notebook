@@ -54,6 +54,19 @@ class TestProteinView:
         assert "8" in html  # Length
         assert "amino acids" in html
 
+    def test_html_with_properties_generation(self):
+        """Test protein properties panel generation."""
+        view = ProteinView(
+            sequence="MKTAYIAK",
+            name="Test Protein",
+            properties={"instability_index": 28.4, "is_stable": 1},
+        )
+        html = view.to_html()
+
+        assert 'data-refua-widget="protein-properties"' in html
+        assert "Instability Index" in html
+        assert "Predicted Stable" in html
+
     def test_repr_html(self):
         """Test _repr_html_ method."""
         view = ProteinView(sequence="MKTAYIAK")
@@ -87,6 +100,17 @@ class TestProteinView:
         # The formatted sequence should not appear when show_sequence is False
         formatted_seq = view._format_sequence()
         assert formatted_seq not in html or formatted_seq == ""
+
+    def test_show_properties_false(self):
+        """Test show_properties=False hides protein properties panel."""
+        view = ProteinView(
+            sequence="MKTAYIAK",
+            properties={"instability_index": 28.4},
+            show_properties=False,
+        )
+        html = view.to_html()
+
+        assert 'data-refua-widget="protein-properties"' not in html
 
     def test_structure_badge_shown(self):
         """Test 3D Structure badge appears with structure data."""
@@ -156,3 +180,17 @@ class TestProteinViewClassMethods:
         view = ProteinView.from_refua_protein(MockProtein())
         assert view.has_structure
         assert view.bcif_data == b"bcif data"
+
+    def test_from_refua_protein_with_properties(self):
+        """Test from_refua_protein extracts property dictionaries."""
+
+        class MockProtein:
+            sequence = "MKTAYIAK"
+            name = "Prop Protein"
+
+            def to_dict(self):
+                return {"instability_index": 28.4, "is_stable": 1}
+
+        view = ProteinView.from_refua_protein(MockProtein())
+        assert view.properties["instability_index"] == 28.4
+        assert view.properties["is_stable"] == 1

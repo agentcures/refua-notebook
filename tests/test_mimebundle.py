@@ -5,6 +5,7 @@ from refua_notebook.widgets.admet import ADMETView
 from refua_notebook.widgets.complex import ComplexView
 from refua_notebook.widgets.molstar import MOLSTAR_CSS_CDN, MOLSTAR_JS_CDN, MolstarView
 from refua_notebook.widgets.protein import ProteinView
+from refua_notebook.widgets.protein_properties import ProteinPropertiesView
 from refua_notebook.widgets.sm import SMView
 from refua_notebook.widgets.smiles import SMILESDRAWER_CDN, SmilesView
 
@@ -70,3 +71,15 @@ class TestMimeBundle:
         assert REFUA_MIME_TYPE in bundle
         html = bundle[REFUA_MIME_TYPE]["html"]
         assert "Props" in html
+
+    def test_protein_properties_mimebundle(self):
+        view = ProteinPropertiesView(
+            {"length": 128, "instability_index": 31.2},
+            title="Protein Props",
+        )
+        bundle = view._repr_mimebundle_()
+
+        assert REFUA_MIME_TYPE in bundle
+        html = bundle[REFUA_MIME_TYPE]["html"]
+        assert "Protein Props" in html
+        assert 'data-refua-widget="protein-properties"' in html

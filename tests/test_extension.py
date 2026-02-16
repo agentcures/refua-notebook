@@ -37,6 +37,7 @@ class TestProteinReprHtml:
         html = _get_protein_repr_html(protein)
         assert "Chain_A" in html
         assert "33" in html or "aa" in html  # Length display
+        assert 'data-refua-widget="protein-properties"' in html
 
     def test_protein_with_ids(self):
         """Test HTML generation with ids attribute."""
