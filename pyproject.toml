@@ -1,6 +1,6 @@
 [project]
 name = "refua-notebook"
-version = "0.5.0"
+version = "0.6.0"
 description = "Jupyter UI extensions for drug discovery visualization - ADMET, 3D complex viewer, SMILES drawing"
 authors = [{ name = "JJ Ben-Joseph", email = "jj@tensorspace.ai" }]
 license = "MIT"
@@ -32,7 +32,7 @@ classifiers = [
 ]
 dependencies = [
     "ipython",
-    "refua>=0.5.0",
+    "refua>=0.6.0",
 ]
 
 [project.urls]

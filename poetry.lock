@@ -4780,14 +4780,14 @@ typing-extensions = {version = ">=4.4.0", markers = "python_version < \"3.13\""}
 
 [[package]]
 name = "refua"
-version = "0.5.0"
+version = "0.6.0"
 description = "Unified drug discovery ML toolkit"
 optional = false
 python-versions = "<3.15,>=3.11"
 groups = ["main"]
 files = [
-    {file = "refua-0.5.0-py3-none-any.whl", hash = "sha256:c667492cc757efdee835d2c3142a3064961bbb8ca7ec20bfdbfcff32ae708012"},
-    {file = "refua-0.5.0.tar.gz", hash = "sha256:a2e6a4a97c801a040f0af0506b3ffaa7aa62c089e9c58b669d935b7f1c5b813e"},
+    {file = "refua-0.6.0-py3-none-any.whl", hash = "sha256:fd28069467d600a0a806f535db4664fcec176746c892ac5a1349663f41d805e9"},
+    {file = "refua-0.6.0.tar.gz", hash = "sha256:df8b9eba881f0b0d35a2d4dd77b59c20aaae0396fc92499a5b78fedd088d2e07"},
 ]
 
 [package.dependencies]
@@ -4823,10 +4823,11 @@ tqdm = "*"
 admet = ["transformers (>=4.45.0)"]
 analysis = ["hydride", "logomaker", "matplotlib", "pandas (>=2.2.2)"]
 cuda = ["cuequivariance_ops_cu12 (>=0.5.0)", "cuequivariance_ops_torch_cu12 (>=0.5.0)", "cuequivariance_torch (>=0.5.0)", "nvidia-ml-py (>=12.535.133)"]
-dev = ["furo (>=2024.1.29)", "myst-parser (>=2.0.0)", "pandas (>=2.2.2)", "pre-commit", "pytest", "redis", "requests", "ruff", "sphinx (>=7)", "sphinx-autodoc-typehints (>=1.25.2)", "types-requests (>=2.32.4)", "wandb (>=0.18.7)"]
+dev = ["black (==24.4.2)", "furo (>=2024.1.29)", "myst-parser (>=2.0.0)", "pandas (>=2.2.2)", "pre-commit", "pytest", "redis", "requests", "ruff", "sphinx (>=7)", "sphinx-autodoc-typehints (>=1.25.2)", "types-requests (>=2.32.4)", "wandb (>=0.18.7)"]
 doc = ["furo (>=2024.1.29)", "myst-parser (>=2.0.0)", "sphinx (>=7)", "sphinx-autodoc-typehints (>=1.25.2)"]
 lint = ["ruff"]
 process = ["p_tqdm", "pdbeccdutils", "redis"]
+protein = ["biopython (>=1.84)"]
 test = ["pandas (>=2.2.2)", "pytest", "requests"]
 train = ["matplotlib", "pandas (>=2.2.2)", "wandb (>=0.18.7)"]
 
@@ -5894,4 +5895,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.13"
-content-hash = "cec3afdc99735aad621ea20295356c132b4785293e7e93bc94b6ac5d76d65b94"
+content-hash = "665393affe2eca1fe870b5ffd41526a6dbfaa98e4dc495d634f4e4e3e010c469"
