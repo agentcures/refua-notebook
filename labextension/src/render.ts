@@ -505,7 +505,9 @@ function initComplexTabs(root: HTMLElement): void {
 
 function initAdmetViews(root: HTMLElement): void {
   const admetViews = Array.from(
-    root.querySelectorAll<HTMLElement>('.admet-view[data-refua-widget="admet"]')
+    root.querySelectorAll<HTMLElement>(
+      '.admet-view[data-refua-widget="admet"], .admet-view[data-refua-widget="protein-properties"]'
+    )
   );
 
   admetViews.forEach((admetRoot) => {

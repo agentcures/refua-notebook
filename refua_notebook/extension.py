@@ -117,76 +117,14 @@ def _get_protein_repr_html(protein_obj: Any, include_scripts: bool = True) -> st
         HTML representation showing protein information and optionally 3D structure.
     """
     from refua import Protein as RefuaProtein
-    from refua_notebook.widgets.molstar import MolstarView
+    from refua_notebook.widgets.protein import ProteinView
 
     if not isinstance(protein_obj, RefuaProtein):
         raise TypeError("Expected a refua Protein object for Protein display.")
 
-    sequence = protein_obj.sequence
-
-    name = None
-    if hasattr(protein_obj, "ids"):
-        ids = protein_obj.ids
-        if isinstance(ids, str):
-            name = ids
-        elif isinstance(ids, (list, tuple)) and ids:
-            name = str(ids[0])
-
-    bcif_data = None
-    pdb_data = None
-    if hasattr(protein_obj, "to_bcif"):
-        try:
-            bcif_data = protein_obj.to_bcif()
-        except Exception:
-            pass
-    if bcif_data is None and hasattr(protein_obj, "to_pdb"):
-        try:
-            pdb_data = protein_obj.to_pdb()
-        except Exception:
-            pass
-
-    html_parts = []
-
-    # Show 3D structure if available
-    if bcif_data or pdb_data:
-        viewer = MolstarView(
-            bcif_data=bcif_data,
-            pdb_data=pdb_data,
-            width=600,
-            height=400,
-            show_controls=True,
-        )
-        html_parts.append(viewer.to_html(include_scripts=include_scripts))
-
-    # Show protein info card
-    seq_display = ""
-    if sequence:
-        seq_len = len(sequence)
-        # Truncate long sequences for display
-        if len(sequence) > 60:
-            seq_display = f"{sequence[:30]}...{sequence[-30:]}"
-        else:
-            seq_display = sequence
-        seq_info = f"<strong>Length:</strong> {seq_len} aa"
-    else:
-        seq_info = ""
-
-    escaped_name = html.escape(name) if name else "Protein"
-    escaped_seq_display = html.escape(seq_display) if seq_display else ""
-    title_html = f"<strong>{escaped_name}</strong>"
-
-    info_html = f"""
-<div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            margin: 8px 0; padding: 12px; background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-            border: 1px solid #e2e8f0; border-radius: 8px; max-width: 600px;">
-    <div style="font-size: 14px; margin-bottom: 8px;">{title_html}</div>
-    {f'<div style="font-size: 12px; color: #64748b; margin-bottom: 8px;">{seq_info}</div>' if seq_info else ''}
-    {f'<div style="font-family: monospace; font-size: 11px; color: #475569; word-break: break-all; background: #fff; padding: 8px; border-radius: 4px;">{escaped_seq_display}</div>' if escaped_seq_display else ''}
-</div>
-"""
-    html_parts.append(info_html)
-
-    return "\n".join(html_parts)
+    return ProteinView.from_refua_protein(protein_obj).to_html(
+        include_scripts=include_scripts
+    )
 
 
 def _get_complex_repr_html(complex_obj: Any, include_scripts: bool = True) -> str:

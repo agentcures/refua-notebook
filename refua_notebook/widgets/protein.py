@@ -9,7 +9,7 @@ from __future__ import annotations
 import html
 import uuid
 from types import ModuleType
-from typing import Any, Optional
+from typing import Any, Mapping, Optional
 
 from refua_notebook.mime import REFUA_MIME_TYPE
 
@@ -33,6 +33,8 @@ class ProteinView:
         Amino acid sequence of the protein.
     name : str, optional
         Name or identifier of the protein.
+    properties : dict, optional
+        Dictionary of sequence-derived protein properties.
     bcif_data : bytes, optional
         Binary CIF structure data.
     pdb_data : str, optional
@@ -45,6 +47,9 @@ class ProteinView:
         Whether to show 3D structure if available. Default True.
     show_sequence : bool, optional
         Whether to show the sequence. Default True.
+    show_properties : bool, optional
+        Whether to show the protein properties panel when properties are
+        available. Default True.
     sequence_display_length : int, optional
         Maximum length of sequence to display. Default 60.
 
@@ -57,22 +62,26 @@ class ProteinView:
         self,
         sequence: Optional[str] = None,
         name: Optional[str] = None,
+        properties: Optional[Mapping[str, Any]] = None,
         bcif_data: Optional[bytes] = None,
         pdb_data: Optional[str] = None,
         width: int = 600,
         height: int = 400,
         show_structure: bool = True,
         show_sequence: bool = True,
+        show_properties: bool = True,
         sequence_display_length: int = 60,
     ):
         self.sequence = sequence.strip() if sequence else None
         self.name = name
+        self.properties = dict(properties) if isinstance(properties, Mapping) else {}
         self.bcif_data = bcif_data
         self.pdb_data = pdb_data
         self.width = max(width, 300)
         self.height = max(height, 200)
         self.show_structure = show_structure
         self.show_sequence = show_sequence
+        self.show_properties = show_properties
         self.sequence_display_length = sequence_display_length
         self._element_id = f"protein-{uuid.uuid4().hex[:8]}"
 
@@ -137,6 +146,18 @@ class ProteinView:
 </div>
 """
         html_parts.append(info_html)
+
+        if self.show_properties and self.properties:
+            from refua_notebook.widgets.protein_properties import ProteinPropertiesView
+
+            title_base = self.name if self.name else "Protein"
+            properties_view = ProteinPropertiesView(
+                self.properties,
+                title=f"{title_base} Properties",
+                compact=self.width <= 620,
+                show_categories=True,
+            )
+            html_parts.append(properties_view.to_html())
 
         return "\n".join(html_parts)
 
@@ -204,6 +225,7 @@ class ProteinView:
 
         bcif_data = None
         pdb_data = None
+        properties = None
 
         if hasattr(protein, "to_bcif"):
             try:
@@ -217,9 +239,30 @@ class ProteinView:
             except Exception:
                 pass
 
+        if hasattr(protein, "to_dict"):
+            try:
+                payload = protein.to_dict()
+                if isinstance(payload, Mapping):
+                    properties = dict(payload)
+            except Exception:
+                properties = None
+
+        if properties is None and hasattr(protein, "properties"):
+            try:
+                payload = getattr(protein, "properties")
+                if callable(payload):
+                    payload = payload()
+                if hasattr(payload, "to_dict"):
+                    payload = payload.to_dict()
+                if isinstance(payload, Mapping):
+                    properties = dict(payload)
+            except Exception:
+                properties = None
+
         return cls(
             sequence=sequence,
             name=name,
+            properties=properties,
             bcif_data=bcif_data,
             pdb_data=pdb_data,
             **kwargs,
