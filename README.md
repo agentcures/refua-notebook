@@ -95,6 +95,7 @@ The `examples/` directory includes runnable notebooks:
 
 - `refua_folding.ipynb`
 - `refua_antibody_design.ipynb`
+- `refua_peptide_design_mdm2.ipynb`
 
 Rebuild all examples (executes and writes outputs in-place):
 
