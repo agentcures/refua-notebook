@@ -653,8 +653,10 @@ def _dynamic_threshold(
             description,
         )
 
-    if norm_key.endswith("_flag") or norm_key.endswith("_present") or norm_key.endswith(
-        "_risk"
+    if (
+        norm_key.endswith("_flag")
+        or norm_key.endswith("_present")
+        or norm_key.endswith("_risk")
     ):
         return ProteinThreshold(
             norm_key,
@@ -908,8 +910,10 @@ def _auto_property_insight(
         )
 
     if category == "peptide_liability":
-        if norm_key.endswith("_flag") or norm_key.endswith("_present") or norm_key.endswith(
-            "_risk"
+        if (
+            norm_key.endswith("_flag")
+            or norm_key.endswith("_present")
+            or norm_key.endswith("_risk")
         ):
             return ProteinInsight(
                 what=what_text,
@@ -1217,9 +1221,7 @@ class ProteinPropertiesView:
 
         category_keys: List[str] = []
         if self.show_categories:
-            category_keys = [
-                key for key in CATEGORY_ORDER if categories.get(key)
-            ]
+            category_keys = [key for key in CATEGORY_ORDER if categories.get(key)]
 
         show_tabs = self.show_categories and len(category_keys) > 0
 

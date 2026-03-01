@@ -259,22 +259,23 @@ class MolstarView:
             return "nucleic"
         if comp_type in ("ion", "metal", "metal_ion") or "ion" in comp_type:
             return "ion"
-        if comp_type in (
-            "ligand",
-            "sm",
-            "small_molecule",
-            "small molecule",
-            "molecule",
-        ) or has_smiles:
-            return "ligand"
         if (
-            not has_sequence
-            and (
-                "ligand" in hint_text
-                or "small molecule" in hint_text
-                or "small_molecule" in hint_text
-                or re.search(r"\bl\d+\b", hint_text)
+            comp_type
+            in (
+                "ligand",
+                "sm",
+                "small_molecule",
+                "small molecule",
+                "molecule",
             )
+            or has_smiles
+        ):
+            return "ligand"
+        if not has_sequence and (
+            "ligand" in hint_text
+            or "small molecule" in hint_text
+            or "small_molecule" in hint_text
+            or re.search(r"\bl\d+\b", hint_text)
         ):
             return "ligand"
         if comp_type in ("protein", "peptide", "antibody") or has_sequence:
