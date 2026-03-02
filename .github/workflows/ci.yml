@@ -27,7 +27,7 @@ jobs:
           pip install -e .
           pip install -e ".[test]" || true
           pip install -e ".[dev]" || true
-          pip install pytest ruff mypy build twine
+          pip install pytest ruff mypy build twine nbformat
 
       - name: Ruff
         run: |
@@ -40,7 +40,7 @@ jobs:
       - name: Mypy
         run: |
           if grep -q "^\[tool.mypy" pyproject.toml; then
-            mypy src
+            mypy refua_notebook
           else
             echo "No mypy config; skipping."
           fi
