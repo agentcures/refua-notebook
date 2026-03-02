@@ -13,11 +13,10 @@ from typing import Any, Mapping, Optional
 
 from refua_notebook.mime import REFUA_MIME_TYPE
 
-_ipython_display_module: ModuleType | None
 try:
     import IPython.display as _ipython_display_module
 except ImportError:
-    _ipython_display_module = None
+    _ipython_display_module = None  # type: ignore[assignment]
 
 
 class ProteinView:

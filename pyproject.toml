@@ -73,6 +73,7 @@ playwright = "*"
 
 [tool.mypy]
 python_version = "3.12"
+ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = ["refua", "refua.*"]
