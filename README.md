@@ -95,6 +95,7 @@ The `examples/` directory includes runnable notebooks:
 
 - `refua_folding.ipynb`
 - `refua_showcase_mpro_nirmatrelvir.ipynb`
+- `refua_multiligand_dhfr.ipynb`
 - `refua_antibody_design.ipynb`
 - `refua_antibody_design_pd_l1.ipynb`
 - `refua_antibody_design_her2.ipynb`
