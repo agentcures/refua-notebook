@@ -1,6 +1,6 @@
 [project]
 name = "refua-notebook"
-version = "0.7.1"
+version = "0.7.2"
 description = "Jupyter UI extensions for drug discovery visualization - ADMET, 3D complex viewer, SMILES drawing"
 authors = [{ name = "JJ Ben-Joseph", email = "jj@tensorspace.ai" }]
 license = "MIT"
