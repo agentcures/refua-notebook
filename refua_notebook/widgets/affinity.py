@@ -9,9 +9,9 @@ from __future__ import annotations
 import html
 import re
 import uuid
+from collections.abc import Mapping
 from dataclasses import asdict, is_dataclass
-from types import ModuleType
-from typing import Any, Mapping, Optional
+from typing import Any
 
 from refua_notebook.mime import REFUA_MIME_TYPE
 
@@ -69,7 +69,7 @@ class AffinityView:
         self._element_id = f"affinity-{uuid.uuid4().hex[:8]}"
 
     @staticmethod
-    def _coerce_properties(properties: Any) -> Optional[dict[str, Any]]:
+    def _coerce_properties(properties: Any) -> dict[str, Any] | None:
         if properties is None:
             return None
         if isinstance(properties, Mapping):
@@ -127,7 +127,7 @@ class AffinityView:
         }
 
     @staticmethod
-    def _to_float(value: Any) -> Optional[float]:
+    def _to_float(value: Any) -> float | None:
         try:
             return float(value)
         except (TypeError, ValueError):
@@ -455,7 +455,9 @@ class AffinityView:
         """IPython HTML representation for inline display."""
         return self._render_html()
 
-    def _repr_mimebundle_(self, include=None, exclude=None):
+    def _repr_mimebundle_(
+        self, include: Any = None, exclude: Any = None
+    ) -> dict[str, Any]:
         """Provide a custom MIME bundle for JupyterLab rendering."""
         html_output = self._render_html()
         return {

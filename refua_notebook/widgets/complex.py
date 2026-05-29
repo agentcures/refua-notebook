@@ -8,9 +8,9 @@ from __future__ import annotations
 
 import html
 import uuid
+from collections.abc import Mapping, Sequence
 from dataclasses import asdict, is_dataclass
-from types import ModuleType
-from typing import Any, Mapping, Optional, Sequence
+from typing import Any
 
 from refua_notebook.mime import REFUA_MIME_TYPE
 
@@ -59,12 +59,12 @@ class ComplexView:
 
     def __init__(
         self,
-        bcif_data: Optional[bytes] = None,
-        pdb_data: Optional[str] = None,
-        name: Optional[str] = None,
-        ligand_name: Optional[str] = None,
-        affinity: Optional[Mapping[str, Any]] = None,
-        components: Optional[Sequence[Mapping[str, Any]]] = None,
+        bcif_data: bytes | None = None,
+        pdb_data: str | None = None,
+        name: str | None = None,
+        ligand_name: str | None = None,
+        affinity: Mapping[str, Any] | None = None,
+        components: Sequence[Mapping[str, Any]] | None = None,
         width: int = 700,
         height: int = 500,
         show_controls: bool = False,
@@ -88,7 +88,7 @@ class ComplexView:
         return self.bcif_data is not None or self.pdb_data is not None
 
     @staticmethod
-    def _coerce_properties(properties: Any) -> Optional[Mapping[str, Any]]:
+    def _coerce_properties(properties: Any) -> Mapping[str, Any] | None:
         if properties is None:
             return None
         if isinstance(properties, Mapping):
@@ -121,7 +121,7 @@ class ComplexView:
         return None
 
     @staticmethod
-    def _extract_admet_properties(properties: Any) -> Optional[Mapping[str, Any]]:
+    def _extract_admet_properties(properties: Any) -> Mapping[str, Any] | None:
         props = ComplexView._coerce_properties(properties)
         if not props:
             return None
@@ -836,7 +836,9 @@ __TABS_SCRIPT__
         """IPython HTML representation for inline display."""
         return self._render_html()
 
-    def _repr_mimebundle_(self, include=None, exclude=None):
+    def _repr_mimebundle_(
+        self, include: Any = None, exclude: Any = None
+    ) -> dict[str, Any]:
         """Provide a custom MIME bundle for JupyterLab rendering."""
         return {
             "text/html": self._render_html(),
@@ -860,8 +862,8 @@ __TABS_SCRIPT__
     def from_refua_complex(
         cls,
         complex_obj: Any,
-        **kwargs,
-    ) -> "ComplexView":
+        **kwargs: Any,
+    ) -> ComplexView:
         """Create a ComplexView from a Refua Complex object.
 
         Parameters
@@ -887,7 +889,7 @@ __TABS_SCRIPT__
         bcif_data = None
         pdb_data = None
 
-        def _try_method(obj: Any, method: str) -> Optional[Any]:
+        def _try_method(obj: Any, method: str) -> Any | None:
             if obj is None or not hasattr(obj, method):
                 return None
             try:
@@ -992,7 +994,7 @@ __TABS_SCRIPT__
                 return True
             return False
 
-        def _next_chain_ids(entity: Any) -> Optional[Sequence[str]]:
+        def _next_chain_ids(entity: Any) -> Sequence[str] | None:
             nonlocal chain_idx
             if not chain_ids or _is_design_file(entity):
                 return None
@@ -1002,16 +1004,16 @@ __TABS_SCRIPT__
             chain_idx += 1
             return ids
 
-        def _collect_ids(entity: Any, fallback: Optional[Sequence[str]]) -> list[str]:
+        def _collect_ids(entity: Any, fallback: Sequence[str] | None) -> list[str]:
             ids: list[str] = []
             raw_ids = None
             if isinstance(entity, Mapping):
                 raw_ids = entity.get("ids") or entity.get("id")
             else:
                 if hasattr(entity, "ids"):
-                    raw_ids = getattr(entity, "ids")
+                    raw_ids = entity.ids
                 elif hasattr(entity, "id"):
-                    raw_ids = getattr(entity, "id")
+                    raw_ids = entity.id
             if raw_ids is not None:
                 if isinstance(raw_ids, str):
                     ids.append(raw_ids)
@@ -1171,11 +1173,11 @@ __TABS_SCRIPT__
     @classmethod
     def from_structure_data(
         cls,
-        bcif_data: Optional[bytes] = None,
-        pdb_data: Optional[str] = None,
-        name: Optional[str] = None,
-        **kwargs,
-    ) -> "ComplexView":
+        bcif_data: bytes | None = None,
+        pdb_data: str | None = None,
+        name: str | None = None,
+        **kwargs: Any,
+    ) -> ComplexView:
         """Create a ComplexView from structure data.
 
         Parameters

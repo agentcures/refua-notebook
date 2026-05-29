@@ -21,9 +21,9 @@ Example usage:
     >>> %load_ext refua_notebook
 """
 
+import tomllib
 from importlib.metadata import version as _distribution_version
 from pathlib import Path
-import tomllib
 
 
 def _read_version_from_pyproject() -> str | None:
@@ -49,7 +49,7 @@ def _resolve_version() -> str:
 __version__ = _resolve_version()
 
 # Extension functions
-from refua_notebook.extension import (
+from refua_notebook.extension import (  # noqa: E402
     activate,
     deactivate,
     is_active,
@@ -58,7 +58,7 @@ from refua_notebook.extension import (
 )
 
 
-def _jupyter_labextension_paths():
+def _jupyter_labextension_paths() -> list[dict[str, str]]:
     """Expose the prebuilt JupyterLab extension for federated discovery."""
     return [
         {

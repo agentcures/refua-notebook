@@ -28,7 +28,7 @@ from __future__ import annotations
 
 import html
 import sys
-from typing import TYPE_CHECKING, Any, Optional
+from typing import TYPE_CHECKING, Any
 
 from refua_notebook.mime import REFUA_MIME_TYPE
 
@@ -54,6 +54,7 @@ def _get_sm_repr_html(sm_obj: Any, include_scripts: bool = True) -> str:
     """
     from rdkit import Chem
     from refua import MolProperties, SmallMolecule
+
     from refua_notebook.widgets.admet import ADMETView
     from refua_notebook.widgets.smiles import SmilesView
 
@@ -117,6 +118,7 @@ def _get_protein_repr_html(protein_obj: Any, include_scripts: bool = True) -> st
         HTML representation showing protein information and optionally 3D structure.
     """
     from refua import Protein as RefuaProtein
+
     from refua_notebook.widgets.protein import ProteinView
 
     if not isinstance(protein_obj, RefuaProtein):
@@ -143,6 +145,7 @@ def _get_complex_repr_html(complex_obj: Any, include_scripts: bool = True) -> st
     import refua
     from refua import Complex as RefuaComplex
     from refua.unified import FoldResult
+
     from refua_notebook.widgets.complex import ComplexView
 
     allowed = (RefuaComplex, FoldResult)
@@ -212,7 +215,9 @@ _REFUA_MIME_REGISTRY = (
 )
 
 
-def _register_formatters_by_name(formatter: Any, registry: tuple) -> bool:
+def _register_formatters_by_name(
+    formatter: Any, registry: tuple[tuple[str, str, Any], ...]
+) -> bool:
     if formatter is None or not hasattr(formatter, "for_type_by_name"):
         return False
     for module_name, type_name, handler in registry:
@@ -220,7 +225,9 @@ def _register_formatters_by_name(formatter: Any, registry: tuple) -> bool:
     return True
 
 
-def _unregister_formatters_by_name(formatter: Any, registry: tuple) -> bool:
+def _unregister_formatters_by_name(
+    formatter: Any, registry: tuple[tuple[str, str, Any], ...]
+) -> bool:
     if formatter is None:
         return False
     deferred = getattr(formatter, "deferred_printers", None)
@@ -233,7 +240,7 @@ def _unregister_formatters_by_name(formatter: Any, registry: tuple) -> bool:
     return removed
 
 
-def _get_mime_formatter(ip: "InteractiveShell") -> Optional[Any]:
+def _get_mime_formatter(ip: InteractiveShell) -> Any | None:
     """Return a formatter for the custom Refua MIME type.
 
     The formatter must accept JSON-serializable mappings because Refua widget
@@ -268,7 +275,7 @@ def _get_mime_formatter(ip: "InteractiveShell") -> Optional[Any]:
     return mime_formatter
 
 
-def _register_formatters(ip: Optional["InteractiveShell"] = None) -> bool:
+def _register_formatters(ip: InteractiveShell | None = None) -> bool:
     """Register HTML formatters for Refua types with IPython.
 
     Parameters
@@ -355,7 +362,7 @@ def _register_formatters(ip: Optional["InteractiveShell"] = None) -> bool:
     return True
 
 
-def _unregister_formatters(ip: Optional["InteractiveShell"] = None) -> bool:
+def _unregister_formatters(ip: InteractiveShell | None = None) -> bool:
     """Unregister HTML formatters for Refua types.
 
     Parameters
@@ -446,7 +453,7 @@ def _unregister_formatters(ip: Optional["InteractiveShell"] = None) -> bool:
     return True
 
 
-def activate(ip: Optional["InteractiveShell"] = None) -> bool:
+def activate(ip: InteractiveShell | None = None) -> bool:
     """Activate Refua notebook extension.
 
     This registers HTML representations for Refua objects so they display
@@ -483,7 +490,7 @@ def activate(ip: Optional["InteractiveShell"] = None) -> bool:
     return success
 
 
-def deactivate(ip: Optional["InteractiveShell"] = None) -> bool:
+def deactivate(ip: InteractiveShell | None = None) -> bool:
     """Deactivate Refua notebook extension.
 
     This removes the HTML representations for Refua objects.
@@ -517,7 +524,7 @@ def is_active() -> bool:
     return _extension_active
 
 
-def load_ipython_extension(ip: "InteractiveShell") -> None:
+def load_ipython_extension(ip: InteractiveShell) -> None:
     """Load the Refua notebook extension.
 
     This is called by IPython when using %load_ext refua_notebook.
@@ -538,7 +545,7 @@ def load_ipython_extension(ip: "InteractiveShell") -> None:
     )
 
 
-def unload_ipython_extension(ip: "InteractiveShell") -> None:
+def unload_ipython_extension(ip: InteractiveShell) -> None:
     """Unload the Refua notebook extension.
 
     This is called by IPython when the extension is unloaded.

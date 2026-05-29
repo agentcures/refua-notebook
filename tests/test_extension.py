@@ -1,6 +1,6 @@
 """Tests for Refua notebook extension."""
 
-from refua import Complex, Protein, SM
+from refua import SM, Complex, Protein
 
 from refua_notebook.extension import (
     _get_complex_repr_html,

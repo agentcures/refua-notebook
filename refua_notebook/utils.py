@@ -7,12 +7,13 @@ helper functions used across the widget implementations.
 from __future__ import annotations
 
 import math
-from typing import Any, Dict, List, Mapping, Optional, Sequence, Union
+from collections.abc import Mapping, Sequence
+from typing import Any
 
-Number = Union[int, float]
+Number = int | float
 
 
-def safe_float(value: Any, default: Optional[float] = None) -> Optional[float]:
+def safe_float(value: Any, default: float | None = None) -> float | None:
     """Safely convert a value to float.
 
     Parameters
@@ -99,7 +100,7 @@ def clamp(value: Number, lower: Number, upper: Number) -> Number:
     return max(lower, min(upper, value))
 
 
-def chunk_list(items: Sequence[Any], size: int) -> List[List[Any]]:
+def chunk_list(items: Sequence[Any], size: int) -> list[list[Any]]:
     """Split a sequence into chunks of a given size.
 
     Parameters
@@ -118,7 +119,7 @@ def chunk_list(items: Sequence[Any], size: int) -> List[List[Any]]:
     return [list(items[i : i + size]) for i in range(0, len(items), size)]
 
 
-def merge_dicts(*dicts: Mapping[str, Any]) -> Dict[str, Any]:
+def merge_dicts(*dicts: Mapping[str, Any]) -> dict[str, Any]:
     """Merge multiple dictionaries, later values override earlier.
 
     Parameters
@@ -131,7 +132,7 @@ def merge_dicts(*dicts: Mapping[str, Any]) -> Dict[str, Any]:
     Dict
         Merged dictionary.
     """
-    result: Dict[str, Any] = {}
+    result: dict[str, Any] = {}
     for d in dicts:
         result.update(d)
     return result

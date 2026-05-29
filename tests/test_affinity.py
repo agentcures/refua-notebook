@@ -1,7 +1,7 @@
 """Tests for affinity prediction rendering."""
 
-from dataclasses import dataclass
 import re
+from dataclasses import dataclass
 
 from refua_notebook.extension import (
     _REFUA_MIME_REGISTRY,
@@ -97,7 +97,7 @@ def test_affinity_extension_helpers_render_structured_html():
     """Affinity helper functions should produce the widget HTML."""
 
     class SlotAffinity:
-        __slots__ = ("ic50", "binding_probability")
+        __slots__ = ("binding_probability", "ic50")
 
         def __init__(self, ic50: float, binding_probability: float):
             self.ic50 = ic50

@@ -8,8 +8,8 @@ from __future__ import annotations
 
 import html
 import uuid
-from types import ModuleType
-from typing import Any, Dict, Mapping, Optional, Sequence
+from collections.abc import Mapping, Sequence
+from typing import Any
 
 from refua_notebook.mime import REFUA_MIME_TYPE
 
@@ -57,8 +57,8 @@ class SMView:
     def __init__(
         self,
         smiles: str,
-        name: Optional[str] = None,
-        properties: Optional[Mapping[str, Any]] = None,
+        name: str | None = None,
+        properties: Mapping[str, Any] | None = None,
         width: int = 400,
         height: int = 300,
         theme: str = "light",
@@ -145,7 +145,9 @@ class SMView:
         """IPython HTML representation for inline display."""
         return self._render_html()
 
-    def _repr_mimebundle_(self, include=None, exclude=None):
+    def _repr_mimebundle_(
+        self, include: Any = None, exclude: Any = None
+    ) -> dict[str, Any]:
         """Provide a custom MIME bundle for JupyterLab rendering."""
         return {
             "text/html": self._render_html(),
@@ -169,8 +171,8 @@ class SMView:
     def from_refua_sm(
         cls,
         sm: Any,
-        **kwargs,
-    ) -> "SMView":
+        **kwargs: Any,
+    ) -> SMView:
         """Create an SMView from a Refua SM object.
 
         Parameters
@@ -227,9 +229,9 @@ class SMView:
     def from_smiles(
         cls,
         smiles: str,
-        name: Optional[str] = None,
-        **kwargs,
-    ) -> "SMView":
+        name: str | None = None,
+        **kwargs: Any,
+    ) -> SMView:
         """Create an SMView from a SMILES string.
 
         Parameters
@@ -278,8 +280,8 @@ class SMGridView:
         width: int = 280,
         height: int = 210,
         show_properties: bool = False,
-        **kwargs,
-    ):
+        **kwargs: Any,
+    ) -> None:
         self.molecules = list(molecules)
         self.columns = max(columns, 1)
         self.width = width
@@ -288,7 +290,7 @@ class SMGridView:
         self.kwargs = kwargs
         self._grid_id = f"smgrid-{uuid.uuid4().hex[:8]}"
 
-    def _parse_molecule(self, mol: Any) -> Dict[str, Any]:
+    def _parse_molecule(self, mol: Any) -> dict[str, Any]:
         """Parse a molecule into smiles, name, and properties."""
         if isinstance(mol, str):
             return {"smiles": mol, "name": None, "properties": None}

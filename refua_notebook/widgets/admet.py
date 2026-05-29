@@ -11,9 +11,9 @@ import html
 import math
 import re
 import uuid
+from collections.abc import Mapping
 from dataclasses import dataclass
-from types import ModuleType
-from typing import Any, Dict, List, Mapping
+from typing import Any
 
 from refua_notebook.mime import REFUA_MIME_TYPE
 
@@ -48,7 +48,7 @@ class PropertyInsight:
 
 
 # Standard ADMET property thresholds based on drug-likeness guidelines
-ADMET_THRESHOLDS: Dict[str, PropertyThreshold] = {
+ADMET_THRESHOLDS: dict[str, PropertyThreshold] = {
     # Absorption
     "logP": PropertyThreshold(
         "logP",
@@ -236,7 +236,7 @@ ADMET_THRESHOLDS: Dict[str, PropertyThreshold] = {
     ),
 }
 
-PROPERTY_INSIGHTS: Dict[str, PropertyInsight] = {
+PROPERTY_INSIGHTS: dict[str, PropertyInsight] = {
     "logP": PropertyInsight(
         what="Lipophilicity estimate (octanol/water partition).",
         why="Balances permeability against solubility, clearance, and off-target risk.",
@@ -410,10 +410,9 @@ def _get_status_class(value: float, threshold: PropertyThreshold) -> str:
 
     if opt_low <= value <= opt_high:
         return "optimal"
-    elif warn_low <= value <= warn_high:
+    if warn_low <= value <= warn_high:
         return "warning"
-    else:
-        return "danger"
+    return "danger"
 
 
 def _is_finite_number(value: Any) -> bool:
@@ -923,13 +922,13 @@ def _format_value(value: Any, precision: int = 3) -> str:
     """Format a value for display."""
     if isinstance(value, bool):
         return "Yes" if value else "No"
-    elif isinstance(value, float):
+    if isinstance(value, float):
         if math.isnan(value) or math.isinf(value):
             return "N/A"
         if abs(value) < 0.001 or abs(value) >= 10000:
             return f"{value:.2e}"
         return f"{value:.{precision}g}"
-    elif value is None:
+    if value is None:
         return "N/A"
     return str(value)
 
@@ -1018,14 +1017,14 @@ class ADMETView:
         self.compact = compact
         self._element_id = f"admetview-{uuid.uuid4().hex[:8]}"
 
-    def _build_property_rows(self) -> List[Dict[str, Any]]:
+    def _build_property_rows(self) -> list[dict[str, Any]]:
         """Build list of property row data for rendering."""
         rows = []
         for key, value in self.properties.items():
             norm_key = _normalize_key(key)
             threshold = ADMET_THRESHOLDS.get(norm_key)
 
-            row: Dict[str, Any] = {
+            row: dict[str, Any] = {
                 "key": key,
                 "value": value,
                 "formatted_value": _format_value(value),
@@ -1078,13 +1077,13 @@ class ADMETView:
         return rows
 
     def _group_rows(
-        self, rows: List[Dict[str, Any]]
-    ) -> Dict[str, List[Dict[str, Any]]]:
+        self, rows: list[dict[str, Any]]
+    ) -> dict[str, list[dict[str, Any]]]:
         """Group rows by property-type category."""
         if not self.show_categories:
             return {"all": rows}
 
-        categories: Dict[str, List[Dict[str, Any]]] = {
+        categories: dict[str, list[dict[str, Any]]] = {
             key: [] for key in CATEGORY_ORDER
         }
         for row in rows:
@@ -1191,9 +1190,9 @@ class ADMETView:
         html_parts.extend(["    </span>", "</span>"])
         return "\n".join(html_parts)
 
-    def _render_rows(self, rows: List[Dict[str, Any]]) -> List[str]:
+    def _render_rows(self, rows: list[dict[str, Any]]) -> list[str]:
         """Render property rows for a tab panel."""
-        html_parts: List[str] = []
+        html_parts: list[str] = []
         for row in rows:
             escaped_label = html.escape(row["label"])
             escaped_value = html.escape(row["formatted_value"])
@@ -1234,7 +1233,7 @@ class ADMETView:
         """Render the ADMET view as HTML."""
         rows = self._build_property_rows()
         categories = self._group_rows(rows)
-        category_keys: List[str] = []
+        category_keys: list[str] = []
         if self.show_categories:
             # Always expose five core property-type tabs.
             category_keys = list(CORE_CATEGORY_KEYS)
@@ -1604,7 +1603,9 @@ class ADMETView:
         """IPython HTML representation for inline display."""
         return self._render_html()
 
-    def _repr_mimebundle_(self, include=None, exclude=None):
+    def _repr_mimebundle_(
+        self, include: Any = None, exclude: Any = None
+    ) -> dict[str, Any]:
         """Provide a custom MIME bundle for JupyterLab rendering."""
         return {
             "text/html": self._render_html(),

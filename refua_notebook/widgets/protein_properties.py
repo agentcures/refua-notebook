@@ -11,9 +11,9 @@ import html
 import math
 import re
 import uuid
+from collections.abc import Mapping
 from dataclasses import dataclass
-from types import ModuleType
-from typing import Any, Dict, List, Mapping
+from typing import Any
 
 from refua_notebook.mime import REFUA_MIME_TYPE
 
@@ -69,7 +69,7 @@ _THREE_TO_ONE = {
     "tyr": "Y",
 }
 
-_ALIASES: Dict[str, str] = {
+_ALIASES: dict[str, str] = {
     "mw": "molecular_weight",
     "molecular_weight_da": "molecular_weight",
     "seq_len": "length",
@@ -315,7 +315,7 @@ PEPTIDE_LIABILITY_ORDER = {
 }
 
 
-PROTEIN_THRESHOLDS: Dict[str, ProteinThreshold] = {
+PROTEIN_THRESHOLDS: dict[str, ProteinThreshold] = {
     "length": ProteinThreshold(
         "length",
         "Length",
@@ -407,7 +407,7 @@ PROTEIN_THRESHOLDS: Dict[str, ProteinThreshold] = {
 }
 
 
-PROTEIN_INSIGHTS: Dict[str, ProteinInsight] = {
+PROTEIN_INSIGHTS: dict[str, ProteinInsight] = {
     "length": ProteinInsight(
         what="Total amino-acid count of the sequence.",
         why="Length drives expression burden, fold complexity, and manufacturing scope.",
@@ -1001,8 +1001,8 @@ class ProteinPropertiesView:
         self.compact = compact
         self._element_id = f"proteinprops-{uuid.uuid4().hex[:8]}"
 
-    def _build_property_rows(self) -> List[Dict[str, Any]]:
-        rows: List[Dict[str, Any]] = []
+    def _build_property_rows(self) -> list[dict[str, Any]]:
+        rows: list[dict[str, Any]] = []
         for key, value in self.properties.items():
             raw_key = str(key)
             norm_key = _normalize_key(raw_key)
@@ -1013,7 +1013,7 @@ class ProteinPropertiesView:
             if threshold is None:
                 threshold = _dynamic_threshold(norm_key, label, description)
 
-            row: Dict[str, Any] = {
+            row: dict[str, Any] = {
                 "key": raw_key,
                 "normalized_key": norm_key,
                 "label": label,
@@ -1061,12 +1061,12 @@ class ProteinPropertiesView:
         return rows
 
     def _group_rows(
-        self, rows: List[Dict[str, Any]]
-    ) -> Dict[str, List[Dict[str, Any]]]:
+        self, rows: list[dict[str, Any]]
+    ) -> dict[str, list[dict[str, Any]]]:
         if not self.show_categories:
             return {"all": rows}
 
-        categories: Dict[str, List[Dict[str, Any]]] = {
+        categories: dict[str, list[dict[str, Any]]] = {
             key: [] for key in CATEGORY_ORDER
         }
 
@@ -1175,8 +1175,8 @@ class ProteinPropertiesView:
         html_parts.extend(["    </span>", "</span>"])
         return "\n".join(html_parts)
 
-    def _render_rows(self, rows: List[Dict[str, Any]]) -> List[str]:
-        html_parts: List[str] = []
+    def _render_rows(self, rows: list[dict[str, Any]]) -> list[str]:
+        html_parts: list[str] = []
         for row in rows:
             escaped_label = html.escape(str(row.get("label", "")))
             escaped_value = html.escape(str(row.get("formatted_value", "")))
@@ -1218,7 +1218,7 @@ class ProteinPropertiesView:
         rows = self._build_property_rows()
         categories = self._group_rows(rows)
 
-        category_keys: List[str] = []
+        category_keys: list[str] = []
         if self.show_categories:
             category_keys = [key for key in CATEGORY_ORDER if categories.get(key)]
 
@@ -1581,7 +1581,9 @@ class ProteinPropertiesView:
     def _repr_html_(self) -> str:
         return self._render_html()
 
-    def _repr_mimebundle_(self, include=None, exclude=None):
+    def _repr_mimebundle_(
+        self, include: Any = None, exclude: Any = None
+    ) -> dict[str, Any]:
         return {
             "text/html": self._render_html(),
             REFUA_MIME_TYPE: {"html": self._render_html()},

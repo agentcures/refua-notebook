@@ -9,8 +9,7 @@ from __future__ import annotations
 import html
 import json
 import uuid
-from types import ModuleType
-from typing import Optional
+from typing import Any
 
 from refua_notebook.mime import REFUA_MIME_TYPE
 
@@ -74,7 +73,7 @@ class SmilesView:
         smiles: str,
         width: int = 400,
         height: int = 300,
-        title: Optional[str] = None,
+        title: str | None = None,
         theme: str = "light",
         show_hydrogens: bool = False,
         use_svg: bool = True,
@@ -244,7 +243,9 @@ class SmilesView:
         """IPython HTML representation for inline display."""
         return self._render_html()
 
-    def _repr_mimebundle_(self, include=None, exclude=None):
+    def _repr_mimebundle_(
+        self, include: Any = None, exclude: Any = None
+    ) -> dict[str, Any]:
         """Provide a custom MIME bundle for JupyterLab rendering."""
         return {
             "text/html": self._render_html(),
@@ -268,10 +269,10 @@ class SmilesView:
     def from_smiles_list(
         cls,
         smiles_list: list[str],
-        titles: Optional[list[Optional[str]]] = None,
+        titles: list[str | None] | None = None,
         columns: int = 3,
-        **kwargs,
-    ) -> "SmilesGridView":
+        **kwargs: Any,
+    ) -> SmilesGridView:
         """Create a grid view of multiple SMILES structures.
 
         Parameters
@@ -315,12 +316,12 @@ class SmilesGridView:
     def __init__(
         self,
         smiles_list: list[str],
-        titles: Optional[list[Optional[str]]] = None,
+        titles: list[str | None] | None = None,
         columns: int = 3,
         width: int = 280,
         height: int = 210,
-        **kwargs,
-    ):
+        **kwargs: Any,
+    ) -> None:
         self.smiles_list = smiles_list
         self.titles = titles or [None] * len(smiles_list)
         self.columns = max(columns, 1)
@@ -334,7 +335,7 @@ class SmilesGridView:
         grid_id = html.escape(self._grid_id)
 
         items_html = []
-        for smiles, title in zip(self.smiles_list, self.titles):
+        for smiles, title in zip(self.smiles_list, self.titles, strict=False):
             view = SmilesView(
                 smiles,
                 title=title,

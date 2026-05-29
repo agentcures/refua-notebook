@@ -11,8 +11,8 @@ import html
 import json
 import re
 import uuid
-from types import ModuleType
-from typing import Any, Mapping, Optional, Sequence
+from collections.abc import Mapping, Sequence
+from typing import Any
 
 from refua_notebook.mime import REFUA_MIME_TYPE
 
@@ -172,11 +172,11 @@ class MolstarView:
 
     def __init__(
         self,
-        bcif_data: Optional[bytes] = None,
-        pdb_data: Optional[str] = None,
-        url: Optional[str] = None,
-        ligand_name: Optional[str] = None,
-        components: Optional[Sequence[Mapping[str, Any]]] = None,
+        bcif_data: bytes | None = None,
+        pdb_data: str | None = None,
+        url: str | None = None,
+        ligand_name: str | None = None,
+        components: Sequence[Mapping[str, Any]] | None = None,
         width: int = 600,
         height: int = 400,
         background: str = "white",
@@ -284,7 +284,7 @@ class MolstarView:
         return "other"
 
     @staticmethod
-    def _detect_antibody_chain_role(component: Mapping[str, Any]) -> Optional[str]:
+    def _detect_antibody_chain_role(component: Mapping[str, Any]) -> str | None:
         """Best-effort heavy/light chain detection from component labels."""
         hint_text = MolstarView._collect_component_hint_text(component)
         if _HEAVY_CHAIN_HINT_PATTERN.search(hint_text):
@@ -471,7 +471,7 @@ class MolstarView:
             inferred.append((chain_id, role))
         return inferred
 
-    def _build_structure_inferred_color_plan(self) -> Optional[dict[str, Any]]:
+    def _build_structure_inferred_color_plan(self) -> dict[str, Any] | None:
         chain_roles = self._infer_chain_roles_from_structure()
         if not chain_roles:
             return None
@@ -645,13 +645,13 @@ class MolstarView:
             return "mmcif", "text/plain"
         return "bcif", "application/octet-stream"
 
-    def _get_data_url(self) -> Optional[str]:
+    def _get_data_url(self) -> str | None:
         """Convert BCIF/PDB data to a data URL for loading."""
         if self.bcif_data is not None:
             _, mime_type = self._infer_bcif_format_and_mime()
             b64_data = base64.b64encode(self.bcif_data).decode("ascii")
             return f"data:{mime_type};base64,{b64_data}"
-        elif self.pdb_data is not None:
+        if self.pdb_data is not None:
             b64_data = base64.b64encode(self.pdb_data.encode("utf-8")).decode("ascii")
             return f"data:text/plain;base64,{b64_data}"
         return None
@@ -1128,7 +1128,9 @@ class MolstarView:
         """IPython HTML representation for inline display."""
         return self._render_html()
 
-    def _repr_mimebundle_(self, include=None, exclude=None):
+    def _repr_mimebundle_(
+        self, include: Any = None, exclude: Any = None
+    ) -> dict[str, Any]:
         """Provide a custom MIME bundle for JupyterLab rendering."""
         return {
             "text/html": self._render_html(),
@@ -1152,9 +1154,9 @@ class MolstarView:
     def from_refua_result(
         cls,
         result: Any,
-        ligand_name: Optional[str] = None,
-        **kwargs,
-    ) -> "MolstarView":
+        ligand_name: str | None = None,
+        **kwargs: Any,
+    ) -> MolstarView:
         """Create a MolstarView from a Refua Complex folding result.
 
         Parameters
@@ -1175,7 +1177,7 @@ class MolstarView:
         return cls(bcif_data=bcif_data, ligand_name=ligand_name, **kwargs)
 
     @classmethod
-    def from_pdb_id(cls, pdb_id: str, **kwargs) -> "MolstarView":
+    def from_pdb_id(cls, pdb_id: str, **kwargs: Any) -> MolstarView:
         """Create a MolstarView from a PDB ID.
 
         Parameters

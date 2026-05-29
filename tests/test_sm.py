@@ -1,6 +1,7 @@
 """Tests for SMView widget."""
 
 import pytest
+
 from refua_notebook.widgets.sm import SMGridView, SMView
 
 
