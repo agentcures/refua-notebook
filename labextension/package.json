@@ -20,9 +20,9 @@
     "style.js"
   ],
   "scripts": {
-    "build": "tsc -p . && node ./node_modules/@jupyterlab/builder/lib/build.js",
-    "build:prod": "tsc -p . && node ./node_modules/@jupyterlab/builder/lib/build.js --production",
-    "build:dev": "tsc -p . && node ./node_modules/@jupyterlab/builder/lib/build.js --development",
+    "build": "tsc -p . && jupyter-builder build .",
+    "build:prod": "tsc -p . && jupyter-builder build .",
+    "build:dev": "tsc -p . && jupyter-builder build . --development=True",
     "clean": "rimraf lib tsconfig.tsbuildinfo"
   },
   "dependencies": {

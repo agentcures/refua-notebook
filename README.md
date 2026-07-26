@@ -13,10 +13,10 @@ Jupyter UI extensions for drug discovery visualization. This package provides in
 pip install refua-notebook
 ```
 
-Or with Poetry:
+Or with uv:
 
 ```bash
-poetry add refua-notebook
+uv add refua-notebook
 ```
 
 `refua-notebook` depends on Refua directly, so installing this package will also
@@ -65,8 +65,8 @@ To rebuild the prebuilt labextension (requires network access for npm packages):
 
 ```bash
 cd labextension
-yarn install
-yarn build:prod
+npx --yes yarn@1.22.22 install --frozen-lockfile
+uv run --locked --project .. -- npx --yes yarn@1.22.22 build:prod
 ```
 
 ## Refua Integration
@@ -107,7 +107,7 @@ The `examples/` directory includes runnable notebooks:
 Rebuild all examples (executes and writes outputs in-place):
 
 ```bash
-poetry run jupyter nbconvert --execute --to notebook --inplace examples/*.ipynb
+uv run jupyter nbconvert --execute --to notebook --inplace examples/*.ipynb
 ```
 
 ## API Reference
@@ -133,17 +133,17 @@ git clone <your-repo-url>
 cd refua-notebook
 
 # Install dependencies
-poetry install
+uv sync
 
 # Run tests
-poetry run pytest
+uv run pytest
 
 # Optional browser-level JupyterLab widget test
-poetry run playwright install chromium
-REFUA_JLAB_PLAYWRIGHT=1 poetry run pytest tests/test_jupyterlab_playwright.py
+uv run playwright install chromium
+REFUA_JLAB_PLAYWRIGHT=1 uv run pytest tests/test_jupyterlab_playwright.py
 
 # Format code
-poetry run black refua_notebook tests
+uv run black refua_notebook tests
 ```
 
 ## License

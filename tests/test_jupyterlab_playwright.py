@@ -195,7 +195,7 @@ def test_jupyterlab_widgets_render_with_playwright(tmp_path: Path) -> None:
                 except PlaywrightError as channel_exc:
                     pytest.skip(
                         "Playwright Chromium is unavailable; run "
-                        "`poetry run playwright install chromium` or ensure "
+                        "`uv run playwright install chromium` or ensure "
                         "system Chrome is installed. "
                         f"(bundle error: {launch_error}; channel error: {channel_exc})"
                     )
@@ -225,9 +225,9 @@ def test_jupyterlab_widgets_render_with_playwright(tmp_path: Path) -> None:
             admet_tab_labels = admet_root.locator(
                 "[data-admet-tab]"
             ).all_text_contents()
-            assert any("All" in label for label in admet_tab_labels)
-            assert any("Absorption" in label for label in admet_tab_labels)
-            assert any("Toxicity" in label for label in admet_tab_labels)
+            assert any("Drug-Likeness" in label for label in admet_tab_labels)
+            assert any("Surface & Electronics" in label for label in admet_tab_labels)
+            assert any("ADMET Profile" in label for label in admet_tab_labels)
             admet_rows_text = " ".join(
                 admet_root.locator('[data-admet-row="1"]').all_text_contents()
             ).lower()

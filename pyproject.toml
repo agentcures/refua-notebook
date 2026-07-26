@@ -41,35 +41,39 @@ Repository = "https://github.com/agentcures/refua-notebook"
 Documentation = "https://github.com/agentcures/refua-notebook#readme"
 Issues = "https://github.com/agentcures/refua-notebook/issues"
 
-[tool.poetry]
-packages = [{include = "refua_notebook"}]
-include = [
-    { path = "LICENSE" },
-    { path = "README.md" },
-    { path = "examples/*.ipynb" },
-    { path = "labextension/package.json", format = ["sdist"] },
-    { path = "labextension/yarn.lock", format = ["sdist"] },
-    { path = "labextension/tsconfig.json", format = ["sdist"] },
-    { path = "labextension/src/**", format = ["sdist"] },
-    { path = "labextension/style/**", format = ["sdist"] },
-    { path = "labextension/lib/**", format = ["sdist"] },
-    { path = "refua_notebook/labextension/**", format = ["sdist", "wheel"] },
-]
-exclude = [
-    "examples/**/.ipynb_checkpoints/**",
+[dependency-groups]
+dev = [
+    "pytest",
+    "black",
+    "pre-commit>=4.5.1",
+    "ruff",
+    "mypy",
+    "jupyterlab",
+    "ipykernel",
+    "nbconvert",
+    "nbformat",
+    "jupyter",
+    "playwright",
+    "twine>=6.1",
 ]
 
-[tool.poetry.group.dev.dependencies]
-pytest = "*"
-black = "*"
-pre-commit = ">=4.5.1"
-mypy = "*"
-jupyterlab = "*"
-ipykernel = "*"
-nbconvert = "*"
-nbformat = "*"
-jupyter = "*"
-playwright = "*"
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["refua_notebook*"]
+
+[tool.setuptools.package-data]
+refua_notebook = ["labextension/**"]
+
+[tool.setuptools.data-files]
+"share/jupyter/labextensions/refua-notebook" = [
+    "refua_notebook/labextension/package.json",
+]
+"share/jupyter/labextensions/refua-notebook/static" = [
+    "refua_notebook/labextension/static/*",
+]
 
 [tool.mypy]
 python_version = "3.12"
@@ -80,5 +84,5 @@ module = ["refua", "refua.*"]
 ignore_missing_imports = true
 
 [build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"

@@ -1,0 +1,12 @@
+include LICENSE
+include README.md
+recursive-include examples *.ipynb
+include labextension/package.json
+include labextension/tsconfig.json
+include labextension/yarn.lock
+recursive-include labextension/lib *
+recursive-include labextension/src *
+recursive-include labextension/style *
+recursive-include refua_notebook/labextension *
+prune labextension/node_modules
+global-exclude .ipynb_checkpoints
